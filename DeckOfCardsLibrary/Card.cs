@@ -1,4 +1,6 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace DeckOfCardsLibrary
 {
     public enum Suit
@@ -8,22 +10,38 @@ namespace DeckOfCardsLibrary
         Heart,
         Diamond
     }
+
     public class Card
     {
-        public int Id { get; set; }
-        public Suit Suit { get; set; }
-        public string Value { get; set; }
-        private Dictionary<int, string> ValueMap;
+        [Key]
+        public int CardId { get; set; } = 0;
+        public string Code { get; set; } = "";
+        public string Value { get; set; } = "";
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public Suit Suit { get; set; } = new();
+
+        public Card()
+        {
+        }
         public Card(int value, Suit suit)
         {
-            ValueMap = CreateValueMap();
-            Value = ValueMap[value];
+            Value = value.ToString();
             Suit = suit;
+
+            char suitInitial = Suit.ToString()[0];
+            Code = $"{suitInitial}{Value}";
         }
 
-        private Dictionary<int, string> CreateValueMap()
+        public override string ToString()
         {
-            return new Dictionary<int, string> ()
+            return $"{Suit}{Value}";
+        }
+    }
+}
+
+/*
+        private Dictionary<int, string> ValueMap = new Dictionary<int, string>()
             {
                 {1 , "1" },
                 {2 , "2"},
@@ -39,12 +57,4 @@ namespace DeckOfCardsLibrary
                 {12,"Queen" },
                 {13,"King" },
             };
-        }
-
-        public override string ToString()
-        {
-            return $"Card Suit: {Suit}\nCard Value : {Value}\n\n";
-        }
-
-    }
-}
+*/

@@ -1,27 +1,28 @@
-
-using System.Runtime.CompilerServices;
+using System.ComponentModel.DataAnnotations;
 
 namespace DeckOfCardsLibrary
 {
     public interface IDeckOfCards
     {
-        public void Add(int value, Suit suit);
-        public void AddMultiple(List<Card> setOfCards);
-
-        public Card DrawRandom();
-        public Card DrawFromTop();
-        public void Shuffle();
+        public List<Card> DrawRandom(int numberOfTimes);
+        public List<Card> DrawFromTop(int numberOfTimes);
     }
 
     public class Deck : IDeckOfCards
     {
         //At first we create a concrete poker deck then we generalize
         Random Rand = new Random();
-        public int Id { get; set; }
-        public int Size { get; }
+
+        [Key]
+        public int DeckId { get; set; }
+        public int Capacity { get; private set;}
+        public int Count { get; set; }
 
         private int numberOfCardsPerSuit;
-        public List<Card> Cards { get; set; }
+        public List<Card> Cards { get; set; } = new();
+        public Deck()
+        {
+        }
         public Deck(int size = 52)
         {
             Cards = new List<Card>();
@@ -32,33 +33,48 @@ namespace DeckOfCardsLibrary
             {
                 for (int i = 1; i <= numberOfCardsPerSuit; i++)
                 {
-                    this.Add(i, suit);
-                    Size++;
+                    Cards.Add(new Card(i, suit));
+                    Capacity++;
                 }
             }
+            Count = Capacity;
         }
 
-        public Card DrawRandom(int numberOfTimes)
+        public List<Card> DrawRandom(int numberOfTimes)
         {
-            var index = Rand.Next(1, Cards.Count);
+            List<Card> drawnCards = new();
+            for (int i = 0; i < numberOfTimes; i++)
+            {
+                var index = Rand.Next(1, Cards.Count);
+                var drawnCard = Cards[index];
+                drawnCards.Add(drawnCard);
+                Count--;
 
-            var drawnCard = Cards[index];
-            Cards.RemoveAt(index);
+                Cards.RemoveAt(index);
+            }
 
-            return drawnCard;
+            return drawnCards;
         }
 
-        public Card DrawFromTop(int numberOfTimes)
+        public List<Card> DrawFromTop(int numberOfTimes)
         {
-            var topIndex = Cards.Count - 1;
-            var topCard = Cards[topIndex];
-            Cards.RemoveAt(topIndex);
+            List<Card> drawnCards = new();
 
-            return topCard;
+            for (int i = 0; i < numberOfTimes; i++)
+            {
+                var topIndex = Cards.Count - 1;
+                var topCard = Cards[topIndex];
+                drawnCards.Add(topCard);
+                Count--;
+
+                Cards.RemoveAt(topIndex);
+            }
+
+            return drawnCards;
         }
     }
 
-    public static class DeckExtensions 
+    public static class DeckExtensions
     {
         public static Deck Shuffle(this Deck deck)
         {
@@ -79,6 +95,7 @@ namespace DeckOfCardsLibrary
         public static Deck Add(this Deck deck, int value, Suit suit)
         {
             deck.Cards.Add(new Card(value, suit));
+            deck.Count++;
 
             return deck;
         }
@@ -86,7 +103,9 @@ namespace DeckOfCardsLibrary
         public static Deck AddMultiple(this Deck deck, List<Card> setOfCards)
         {
             deck.Cards.AddRange(setOfCards);
+            deck.Count += setOfCards.Count;
+
+            return deck;
         }
     }
-
 }
