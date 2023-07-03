@@ -28,9 +28,8 @@ public class DeckController : ControllerBase
 
         if(item.State == EntityState.Added)
         {
-        await _dbContext.SaveChangesAsync();
-
-        return Results.Created($"deck/new/{deck.DeckId}", deck);
+            await _dbContext.SaveChangesAsync();
+            return Results.Created($"deck/new/{deck.DeckId}", deck);
         }
         return Results.NotFound(item.Entity);
     }
@@ -39,7 +38,9 @@ public class DeckController : ControllerBase
     [Route("decks")]
     public async Task<IActionResult> GetAll()
     {
-        var allDecks = await _dbContext.Decks.Include(d => d.Cards).ToListAsync();
+        var allDecks = await _dbContext.Decks
+            .Include(d => d.Cards)
+            .ToListAsync();
 
         return Ok(allDecks);
     }
