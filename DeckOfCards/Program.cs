@@ -14,7 +14,7 @@ builder.Services.AddControllers()
 builder.Services.AddDbContext<AppDbContext>(opt => {
     opt.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"));
     
-});COPY . ./
+});
 
 
 builder.Services.AddEndpointsApiExplorer();

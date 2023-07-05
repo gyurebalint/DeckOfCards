@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeckOfCardsLibrary", "DeckO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeckOfCardsLibraryTests", "DeckOfCardsLibraryTests\DeckOfCardsLibraryTests.csproj", "{64986F03-7287-4F1B-BBB8-4412ED9C8F80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeckOfCardsMin", "DeckOfCardsMin\DeckOfCardsMin.csproj", "{D959E1D7-FB04-48F3-B7DF-C6769E5DF029}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeckOfCards", "DeckOfCards\DeckOfCards.csproj", "{1D3634D4-F21E-4682-8F38-3AFDFDC740B8}"
 EndProject
 Global

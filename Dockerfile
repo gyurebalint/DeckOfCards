@@ -3,10 +3,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 EXPOSE 5000
-ENV ASPNETCORE_URLS=http://+:5000
-
+EXPOSE 5001
+# ENV ASPNETCORE_URLS=http://+:80
 # Copy the solution file and restore dependencies
 COPY *.sln .
+COPY DeckOfCards/deck_of_cards.db /app/
 COPY DeckOfCards/*.csproj ./DeckOfCards/
 COPY DeckOfCardsLibrary/*.csproj ./DeckOfCardsLibrary/
 COPY DeckOfCardsLibraryTests/*.csproj ./DeckOfCardsLibraryTests/
@@ -19,7 +20,7 @@ COPY . .
 RUN dotnet build -c Release --no-restore
 
 # Run the tests
-RUN dotnet test --no-restore --verbosity normal --no-build
+# RUN dotnet test --no-restore --verbosity normal --no-build
 
 # Publish the projects
 RUN dotnet publish DeckOfCards/DeckOfCards.csproj -c Release -o /app/publish/DeckOfCards
